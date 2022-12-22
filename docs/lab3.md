@@ -1,4 +1,4 @@
-# Lab3 - Diving Deeper into Component Testing
+# Lab3 - Component Testing (Part 2)
 
 In the previous lab, you got a taste of the basics of component testing with
 Cypress. In this lab, we will go a bit deeper and see how to test a more
@@ -25,7 +25,7 @@ git checkout lab3-start
 :::info
 
 You can find a completed version of this lab in the
-[lab3-complete](https://github.com/cypress-io/cypress-heroes-app/tree/lab3-complete)
+[lab3-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab3-complete)
 branch.
 
 :::
@@ -52,7 +52,7 @@ following test:
 ```ts title=./client/src/app/components/login-form.component.cy.ts
 describe('LoginForm', () => {
   it('should mount', () => {
-    cy.mount('<app-login-form></app-login-form>');
+    cy.mount(LoginFormComponent);
   });
 });
 ```
@@ -85,9 +85,8 @@ import { LoginFormComponent } from './login-form.component';
 
 describe('LoginForm', () => {
   it('should mount', () => {
-    cy.mount('<app-login-form></app-login-form>', {
+    cy.mount(LoginFormComponent, {
       declarations: [
-        LoginFormComponent,
         InputFieldComponent,
         ButtonComponent,
         TextInputComponent,
@@ -162,7 +161,7 @@ Now you can shorten the test to:
 
 ```ts title=./client/src/app/components/login-form.component.cy.ts
 it('should mount', () => {
-  cy.mount('<app-login-form></app-login-form>');
+  cy.mount(LoginFormComponent);
 });
 ```
 
@@ -213,7 +212,7 @@ filling in the email or password. Then we will check that the validation error m
 
 ```ts title=./client/src/app/components/login-form.component.ts
 it('should show validation messages when inputs are blank', () => {
-  cy.mount('<app-login-form></app-login-form>');
+  cy.mount(LoginFormComponent);
   cy.get('button').contains('Sign in').click();
 
   cy.contains('Email is required.');
@@ -228,7 +227,7 @@ the message displays after clicking the button:
 
 ```ts title=./client/src/app/components/login-form.component.ts
 it('should show validation messages when email value is invalid', () => {
-  cy.mount('<app-login-form></app-login-form>');
+  cy.mount(LoginFormComponent);
   cy.get('input[type=email]').type('aaabbb');
   cy.get('button').contains('Sign in').click();
   cy.contains('Email must be a valid email address.');
@@ -260,7 +259,7 @@ do. We must pass in a mock AuthService with a spy attached to the
 
 ```ts title=./client/src/app/components/login-form.component.ts
 it('should not try to authenticate if the form fields are invalid', () => {
-  cy.mount('<app-login-form></app-login-form>', {
+  cy.mount(LoginFormComponent, {
     providers: [
       {
         provide: AuthService,
@@ -296,7 +295,7 @@ it('should show bad login message when credentials are invalid', () => {
     statusCode: 401,
   });
 
-  cy.mount('<app-login-form></app-login-form>');
+  cy.mount(LoginFormComponent);
   cy.get('button').contains('Sign in').click();
 
   cy.get('input[type=email]').type('bad@email.com');
@@ -323,7 +322,7 @@ it('should login when credentials are valid', () => {
   });
 
   cy.mount(
-    '<app-login-form (onLogin)="onLogin.emit($event)"></app-login-form>',
+    LoginFormComponent,
     {
       componentProperties: {
         onLogin: createOutputSpy('onLoginSpy'),

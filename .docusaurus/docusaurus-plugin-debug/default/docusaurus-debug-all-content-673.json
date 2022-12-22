@@ -1,0 +1,165 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "loadedVersions": [
+        {
+          "versionName": "current",
+          "label": "Next",
+          "banner": null,
+          "badge": false,
+          "className": "docs-version-current",
+          "path": "/",
+          "tagsPath": "/tags",
+          "isLast": true,
+          "routePriority": -1,
+          "sidebarFilePath": "/Users/jordan/Desktop/cypress/cypress-heroes-workshop/guide/sidebars.js",
+          "contentPath": "/Users/jordan/Desktop/cypress/cypress-heroes-workshop/guide/docs",
+          "contentPathLocalized": "/Users/jordan/Desktop/cypress/cypress-heroes-workshop/guide/i18n/en/docusaurus-plugin-content-docs/current",
+          "docs": [
+            {
+              "unversionedId": "getting-started",
+              "id": "getting-started",
+              "title": "Getting Started",
+              "description": "Welcome to the Codemash Cypress Workshop!",
+              "source": "@site/docs/getting-started.md",
+              "sourceDirName": ".",
+              "slug": "/",
+              "permalink": "/",
+              "draft": false,
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "slug": "/"
+              },
+              "sidebar": "tutorialSidebar",
+              "next": {
+                "title": "Lab1 - E2E Testing",
+                "permalink": "/lab1"
+              }
+            },
+            {
+              "unversionedId": "lab1",
+              "id": "lab1",
+              "title": "Lab1 - E2E Testing",
+              "description": "We will start our working in this lab by testing a relatively",
+              "source": "@site/docs/lab1.md",
+              "sourceDirName": ".",
+              "slug": "/lab1",
+              "permalink": "/lab1",
+              "draft": false,
+              "tags": [],
+              "version": "current",
+              "frontMatter": {},
+              "sidebar": "tutorialSidebar",
+              "previous": {
+                "title": "Getting Started",
+                "permalink": "/"
+              },
+              "next": {
+                "title": "Lab2 - Component Testing (Part 1)",
+                "permalink": "/lab2"
+              }
+            },
+            {
+              "unversionedId": "lab2",
+              "id": "lab2",
+              "title": "Lab2 - Component Testing (Part 1)",
+              "description": "We will start our component testing journey in this lab by testing a relatively",
+              "source": "@site/docs/lab2.md",
+              "sourceDirName": ".",
+              "slug": "/lab2",
+              "permalink": "/lab2",
+              "draft": false,
+              "tags": [],
+              "version": "current",
+              "frontMatter": {},
+              "sidebar": "tutorialSidebar",
+              "previous": {
+                "title": "Lab1 - E2E Testing",
+                "permalink": "/lab1"
+              },
+              "next": {
+                "title": "Lab3 - Component Testing (Part 2)",
+                "permalink": "/lab3"
+              }
+            },
+            {
+              "unversionedId": "lab3",
+              "id": "lab3",
+              "title": "Lab3 - Component Testing (Part 2)",
+              "description": "In the previous lab, you got a taste of the basics of component testing with",
+              "source": "@site/docs/lab3.md",
+              "sourceDirName": ".",
+              "slug": "/lab3",
+              "permalink": "/lab3",
+              "draft": false,
+              "tags": [],
+              "version": "current",
+              "frontMatter": {},
+              "sidebar": "tutorialSidebar",
+              "previous": {
+                "title": "Lab2 - Component Testing (Part 1)",
+                "permalink": "/lab2"
+              },
+              "next": {
+                "title": "Lab4 - API Testing",
+                "permalink": "/lab4"
+              }
+            },
+            {
+              "unversionedId": "lab4",
+              "id": "lab4",
+              "title": "Lab4 - API Testing",
+              "description": "We will finish our workshop in this lab by testing our API. Logging in as a user is a vital part of our application, so let's write some tests around the /auth endpoint.",
+              "source": "@site/docs/lab4.md",
+              "sourceDirName": ".",
+              "slug": "/lab4",
+              "permalink": "/lab4",
+              "draft": false,
+              "tags": [],
+              "version": "current",
+              "frontMatter": {},
+              "sidebar": "tutorialSidebar",
+              "previous": {
+                "title": "Lab3 - Component Testing (Part 2)",
+                "permalink": "/lab3"
+              }
+            }
+          ],
+          "drafts": [],
+          "sidebars": {
+            "tutorialSidebar": [
+              {
+                "type": "doc",
+                "id": "getting-started"
+              },
+              {
+                "type": "doc",
+                "id": "lab1"
+              },
+              {
+                "type": "doc",
+                "id": "lab2"
+              },
+              {
+                "type": "doc",
+                "id": "lab3"
+              },
+              {
+                "type": "doc",
+                "id": "lab4"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "docusaurus-plugin-content-pages": {
+    "default": null
+  },
+  "docusaurus-plugin-debug": {},
+  "docusaurus-theme-classic": {},
+  "docusaurus-bootstrap-plugin": {},
+  "docusaurus-mdx-fallback-plugin": {}
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "lab3",
+  "id": "lab3",
+  "title": "Lab3 - Component Testing (Part 2)",
+  "description": "In the previous lab, you got a taste of the basics of component testing with",
+  "source": "@site/docs/lab3.md",
+  "sourceDirName": ".",
+  "slug": "/lab3",
+  "permalink": "/lab3",
+  "draft": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Lab2 - Component Testing (Part 1)",
+    "permalink": "/lab2"
+  },
+  "next": {
+    "title": "Lab4 - API Testing",
+    "permalink": "/lab4"
+  }
+}

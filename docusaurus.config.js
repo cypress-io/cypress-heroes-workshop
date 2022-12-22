@@ -6,10 +6,10 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Cypress for Angular Devs Workshop',
-  tagline: 'Cypress is cool. Angular is cool.',
+  title: 'Codemash Cypress Workshop',
+  tagline: 'Cypress is cool',
   url: 'https://cypress.io',
-  baseUrl: process.env.NODE_ENV === 'production' ? '/cypress-heroes-app/' : '/',
+  baseUrl: process.env.NODE_ENV === 'production' ? '/cypress-heroes-workshop/' : '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.svg',
@@ -49,7 +49,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Cypress for Angular Devs Workshop',
+        title: 'Codemash Cypress Workshop',
         logo: {
           src: '/img/cypress-logo-light.png',
           srcDark: '/img/cypress-logo-dark.png',

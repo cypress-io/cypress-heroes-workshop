@@ -1,4 +1,4 @@
-# Lab2 - Starting Component Testing
+# Lab2 - Component Testing (Part 1)
 
 We will start our component testing journey in this lab by testing a relatively
 simple component. The Cypress Heroes app has a button component that would be a
@@ -18,7 +18,7 @@ git checkout lab2-start
 :::info
 
 You can find a completed version of this lab in the
-[lab2-complete](https://github.com/cypress-io/cypress-heroes-app/tree/lab2-complete)
+[lab2-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab2-complete)
 branch.
 
 :::
@@ -258,15 +258,6 @@ it('should respond to onClick event', () => {
   cy.get('@onClickSpy').should('have.been.called');
 });
 ```
-
-:::info
-
-We recommend using the template syntax because it is more like how your
-component is used in a real application and is generally less verbose. However,
-feel free to use whichever syntax best fits your needs. We'll focus on the
-template syntax for the rest of the labs.
-
-:::
 
 ## Using createOutputSpy to Mock Emitters
 
