@@ -4,28 +4,26 @@ slug: /
 
 # Getting Started
 
-Welcome to the Cypress for Angular Devs Workshop!
-
-This workshop covers new features Cypress has in store for Angular devs.
+Welcome to the Codemash Cypress Workshop!
 
 To get started, clone the repo and install the dependencies:
 
 ## Clone Repo and Install Dependencies
 
 ```bash
-git clone https://github.com/cypress-io/cypress-heroes-app.git
+git clone https://github.com/cypress-io/cypress-heroes-workshop.git
 ```
 
 Go into the repo's folder and install the dependencies:
 
 ```bash
-cd cypress-heroes-app
+cd cypress-heroes-workshop
 npm install
 ```
 
 The repo folder contains two pertinent folders:
 
-- **client**: The Angular front-end app
+- **client**: An Angular front-end app
 - **server**: NestJS back-end app that provides the API
 
 Running `npm install` from above installs the dependencies for both apps.
