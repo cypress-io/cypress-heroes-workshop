@@ -23,15 +23,23 @@ import { LoginModalComponent } from '../../components/login-modal/login-modal.co
         <nav>
           <ul class="flex gap-8">
             <li *ngIf="user && user.isAdmin">
-              <app-button type="primary" routerLink="/heroes/new"
+              <app-button
+                data-cy="create-new-hero"
+                type="primary"
+                routerLink="/heroes/new"
                 >Create New Hero</app-button
               >
             </li>
             <li>
-              <app-button *ngIf="user" type="outline" (click)="logout()"
+              <app-button
+                data-cy="logout"
+                *ngIf="user"
+                type="outline"
+                (click)="logout()"
                 >Logout</app-button
               >
               <app-button
+                data-cy="login"
                 *ngIf="!user"
                 type="outline"
                 (click)="showLoginModal()"

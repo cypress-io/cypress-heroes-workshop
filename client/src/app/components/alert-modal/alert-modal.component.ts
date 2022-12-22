@@ -7,7 +7,7 @@ import { ModalService } from '../../services/modal.service';
     <app-modal>
       <div class="flex flex-col gap-4 text-center">
         <div class="flex flex-col items-center text-sm text-gray-500">
-          <h5 class="mb-1 text-xl font-medium text-gray-500">
+          <h5 data-cy="alert-modal-message" class="mb-1 text-xl font-medium text-gray-500">
             {{ message }}
           </h5>
         </div>
