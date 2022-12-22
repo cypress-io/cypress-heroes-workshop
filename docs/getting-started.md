@@ -58,7 +58,7 @@ good starting point to learn testing with Cypress.
 
 Some features of the app include:
 
-- Multi-page with serval components
+- Multi-page with several components
 - Authentication
 - API calls to a real back-end
 - Forms

@@ -1,348 +1,296 @@
-# Lab3 - Component Testing (Part 2)
+# Lab 3 - CT (Part 1)
 
-In the previous lab, you got a taste of the basics of component testing with
-Cypress. In this lab, we will go a bit deeper and see how to test a more
-complex component.
+We will start our component testing journey in this lab by testing a relatively
+simple component. The Cypress Heroes app has a button component that would be a
+great example, so let's write some tests around that.
 
-The `LoginForm` component will be a good example. It is a component that is
-comprised of other components to make up its functionality. There are form
-inputs to manipulate (with validation) and an HTTP request to consider. We'll
-also look at additional Angular APIs around component registration and
-dependency injection for more complex components like the `LoginForm`.
-
-Let's get started!
+![Cypress Heroes Button](/img/cy-heroes-button.jpg)
 
 ## Getting Started
 
-If you continue from lab 2, you can stay in your current branch.
-
-If you are starting with lab 3, checkout the `lab3-start` branch:
+To get started, make sure your current branch is clean, and then checkout the
+`lab2-start` branch:
 
 ```
-git checkout lab3-start
+git checkout lab2-start
 ```
 
 :::info
 
 You can find a completed version of this lab in the
-[lab3-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab3-complete)
+[lab2-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab2-complete)
 branch.
 
 :::
 
 If the app is not currently running, start it:
 
-```bash title=./client
+```bash title='./client'
 npm run start
 ```
 
-Also, if Cypress is not already running, start it up and launch component
-testing:
+## Launch & Configure Cypress
 
-```bash title=./client
+The project has Cypress installed, though it is not yet set up. When you launch
+the app for the first time in a new project Cypress will guide you through a
+configuration wizard to get you up and running quickly.
+
+To start, go into the **client** folder and open Cypress:
+
+```ts title=./client
 npx cypress open
 ```
 
-## Create LoginForm Spec
+![Choose CT](/img/cypress-choose-screen.jpg)
 
-Create a new spec file at
-**./client/src/app/components/login-form.component.cy.ts** and paste in the
-following test:
+When Cypress launches, choose component testing.
 
-```ts title=./client/src/app/components/login-form.component.cy.ts
-describe('LoginForm', () => {
+#### Framework Detection
+
+![CT Angular Detection](/img/ct-angular-detect.jpg)
+
+Cypress will automatically detect Angular as the framework and set up the
+configuration.
+
+Click "Next Step"
+
+#### Install Dev Dependencies
+
+On the "Install Dev Dependencies" screen, you should have already installed all
+the required dependencies, but if they weren't, this screen would let you know
+what you need. Scroll to the bottom and click "Continue".
+
+#### Configuration Files
+
+The next screen shows all the files generated and added to your project. Scroll
+down and click "Continue".
+
+#### Choose a Browser
+
+Now your project is set up. To launch the test runner, select which browser you
+would like to use for testing and click the start button.
+
+![Choose Browser](/img/ct-choose-browser.jpg)
+
+#### Test Runner
+
+![No specs found](/img/no-specs-found.jpg)
+
+The spec list will show any files that match the default spec pattern of
+**\*\*/\*.cy.ts**. Our project doesn't have any tests yet, so we get a "No Specs
+Found" message. Let's hop into our code editor and create one.
+
+## Button Component Test
+
+### Create Spec File
+
+Create a new file named **button.component.cy.ts** in the same directory that
+the `ButtonComponent` currently exists (./client/src/app/components/button). We
+recommend you co-locate your component tests directly next to your component
+source.
+
+### Your First Test
+
+In the spec file, add the following code:
+
+```ts title=./client/src/app/components/button/button.component.cy.ts
+import { ButtonComponent } from './button.component';
+
+describe('ButtonComponent', () => {
   it('should mount', () => {
-    cy.mount(LoginFormComponent);
+    cy.mount(ButtonComponent);
   });
 });
 ```
 
-When the spec is run, you'll see an error thrown in the command log:
+Go back to the test runner and see that the new spec file has shown up in the
+spec list. Click the spec, and the test will execute:
 
-![Login Form Error](/img/login-form-error.jpg)
+![First Button Mount Test](/img/first-button-mount.jpg)
 
-The error happens because the HttpClientModule is not currently registered. You might
-wonder why. The app component has the module registered. But we
-are not using the main app component in our test. We are mounting the
-`LoginFormComponent` in isolation.
+The component mounts but looks off because there is no label for the button. In
+a template, we pass the label to the button by including the text inside of the
+button's tag like so:
 
-#### Register Additional Modules and Declarations
+```html
+<app-button>Click me</app-button>
+```
 
-We've already seen how to register components as declarations by passing in a
-`declarations` array into the `cy.mount` command's second parameter. This config
-parameter allows us to register additional `imports` and `providers`.
+### Using a Wrapper Component
 
-We can get the test passing by registering the additional modules and
-declarations `LoginFormComponent` needs like so:
+One way to pass the text in a component test is to create a wrapper component
+and then mount the wrapper instead. Let's create a second test that uses this
+technique and verify the button has the proper label. Add the following inside
+of the `describe` block below the first test:
 
-```ts title=./client/src/app/components/login-form.component.cy.ts
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent } from '../button/button.component';
-import { InputFieldComponent } from '../input-field/input-field.component';
-import { TextInputComponent } from '../text-input/text-input.component';
-import { LoginFormComponent } from './login-form.component';
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should have custom text', () => {
+  @Component({
+    template: '<app-button>Click me</app-button>',
+  })
+  class ButtonWrapper {}
 
-describe('LoginForm', () => {
-  it('should mount', () => {
-    cy.mount(LoginFormComponent, {
-      declarations: [
-        InputFieldComponent,
-        ButtonComponent,
-        TextInputComponent,
-      ],
-      imports: [HttpClientModule, ReactiveFormsModule],
-    });
+  cy.mount(ButtonWrapper, {
+    declarations: [ButtonComponent],
   });
+  cy.get('button').should('have.text', 'Click me');
 });
 ```
 
-Now the component properly mounts:
+> `@Component` is imported from '@angular/core'
 
-![Login Form Passes](/img/login-form-passes.jpg)
+Now our button looks like it should, and the test also passes:
 
-However, that is a lot of boilerplate code for each test. Fortunately,
-we can use a custom `cy.mount` command to do this registration in a reusable,
-central location and clean up our specs.
+![Second Button Mount Test](/img/second-button-mount.jpg)
 
-## Using a Custom Mount Command
+### Using Template Syntax in cy.mount
 
-With a custom mount command, we can do the configuration that our tests need to
-execute before calling the underlying `mount` command.
+Creating a wrapper component could become tedious, but fortunately, another
+method is at your disposal.
 
-To create one, go into the **./client/cypress/support/component.ts** file and
-replace the current call to register the mount command (around line 36):
+The `cy.mount` command can also accept a template string as its first parameter.
+You could also write the test above as:
 
-```ts title=./client/cypress/support/component.ts
-Cypress.Commands.add('mount', mount);
-```
-
-with:
-
-```ts title=./client/cypress/support/component.ts
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent } from '../../src/app/components/button/button.component';
-import { InputFieldComponent } from '../../src/app/components/input-field/input-field.component';
-import { TextInputComponent } from '../../src/app/components/text-input/text-input.component';
-import { LoginFormComponent } from '../../src/app/components/login-form/login-form.component';
-
-type MountParams = Parameters<typeof mount>;
-
-Cypress.Commands.add(
-  'mount',
-  (component: MountParams[0], config: MountParams[1] = {}) => {
-    const declarations = [
-      ...(config.declarations || []),
-      LoginFormComponent,
-      InputFieldComponent,
-      ButtonComponent,
-      TextInputComponent,
-    ];
-    const imports = [
-      ...(config.imports || []),
-      HttpClientModule,
-      ReactiveFormsModule,
-    ];
-    return mount(component, {
-      ...config,
-      declarations,
-      imports,
-    });
-  }
-);
-```
-
-The new mount command has some predefined `declarations` and `imports` that get
-passed into the underlying mount function, so we don't have to specify them in
-each test.
-
-Now you can shorten the test to:
-
-```ts title=./client/src/app/components/login-form.component.cy.ts
-it('should mount', () => {
-  cy.mount(LoginFormComponent);
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should have custom text', () => {
+  cy.mount(`<app-button>Click me</app-button>`, {
+    declarations: [ButtonComponent],
+  });
+  cy.get('button').should('have.text', 'Click me');
 });
 ```
 
-Nice 🎉!
+We must supply our component as a declaration in the config object when using
+the template syntax. In the next lab, we'll look at centralizing component setup
+and registration in a single place, so it doesn't have to happen in every test.
+But for now, let's write some more tests for our button.
 
-But we can even take our mount command a step further. In the Heroes app, all components belong to their own `ComponentsModule`. So instead of importing each piece individually, we
-can use the `ComponentModule` in the custom mount command:
+## Testing Button with an @Input
 
-```ts title=./client/cypress/support/component.ts
-import { ComponentsModule } from '../../src/app/components/components.module';
+The button component has several inputs that change its functionality. We'll
+take a look at the `focus` input, which has the button set to focus on itself if
+the input is true.
 
-type MountParams = Parameters<typeof mount>;
+Passing inputs to a component depends on whether you are passing in a component
+to the mount command or using the template syntax. We'll go over both approaches
+here.
 
-Cypress.Commands.add(
-  'mount',
-  (component: MountParams[0], config: MountParams[1] = {}) => {
-    const imports = [...(config.imports || []), ComponentsModule];
-    return mount(component, {
-      ...config,
-      imports,
-    });
-  }
-);
-```
+#### Testing Focus using Component Syntax
 
-You can use custom mount commands to suit your needs. You can even create
-multiple ones with different names (ie: `cy.mountInputs`).
+When using component syntax, you pass in additional options to the component in
+the `componentOptions` member of the config object like so:
 
-For more information on creating your own custom mount commands, see the guide
-on
-[Custom Mount Commands for Angular](https://docs.cypress.io/guides/component-testing/custom-mount-angular).
-
-## Test Form Validation
-
-Ok, back to writing actual tests. We will first look at
-testing to verify the form validation works as expected. There are three
-requirements here.
-
-1. If either of the fields is blank when submitting the form, show messages
-   saying the fields are required.
-2. The email address must be in the proper format; if not, show a message.
-3. The form should not submit to the server when in an invalid state.
-
-#### Test Required Field Validation
-
-For the first test, we will grab a reference to the button and click it without
-filling in the email or password. Then we will check that the validation error messages are displayed:
-
-```ts title=./client/src/app/components/login-form.component.ts
-it('should show validation messages when inputs are blank', () => {
-  cy.mount(LoginFormComponent);
-  cy.get('button').contains('Sign in').click();
-
-  cy.contains('Email is required.');
-  cy.contains('Password is required.');
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should be focused when focus input is true', () => {
+  cy.mount(ButtonComponent, {
+    componentProperties: {
+      focus: true,
+    },
+  });
+  cy.get('button').should('have.focus');
 });
 ```
 
-#### Test Email Field Validation
+A nice benefit of using the component syntax is that `componentProperties` will
+be properly typed to the inputs/outputs of the passed-in component, so you will
+get type checking and code completion.
 
-For the next test, we will fill in an invalid value for the email address and verify
-the message displays after clicking the button:
+#### Testing Focus using Template Syntax
 
-```ts title=./client/src/app/components/login-form.component.ts
-it('should show validation messages when email value is invalid', () => {
-  cy.mount(LoginFormComponent);
-  cy.get('input[type=email]').type('aaabbb');
-  cy.get('button').contains('Sign in').click();
-  cy.contains('Email must be a valid email address.');
+When using template syntax, you would wire up the component as you would in a
+component template, using Angular's binding syntax to attach variables and
+events to the component:
+
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should be focused when focus input is true', () => {
+  cy.mount(`<app-button [focus]="true">Click me</app-button>`, {
+    declarations: [ButtonComponent],
+  });
+  cy.get('button').should('have.focus');
 });
 ```
 
-Above, we use the [type()](https://docs.cypress.io/api/commands/type) command on
-the email input, which enters text into a DOM element like a user would.
+## Testing an Emitted Event
 
-#### Test Form is Not Submitted when Invalid
+The `ButtonComponent` emits an `onClick` event when a user clicks it. Let's
+write a test to verify that the event does get raised when doing so.
 
-Up to this point, we've been testing as a user would use the component, which is
-great. This next test will require us to have inside knowledge of what's going on inside of the component. Mentally, we are
-going to shift who we are testing for. In the previous tests, we made sure
-the component was valid for users. In this upcoming test, we will ensure the
-component works as it should for other developers who will consume it.
+To verify the `onClick` event is called, we'll use a
+[Cypress spy](https://docs.cypress.io/guides/guides/stubs-spies-and-clocks),
+which keeps track of method calls and lets us inspect those values.
 
-To do so, we will need to know what happens when the users submit the form.
-Peaking at the source, we see that `authService.login()` is being called. We want to ensure this method does not get called when the form is
-invalid.
+#### Testing onClick using Component Syntax
 
-We can add a spy to the `authService.login()` method and inspect if it was
-called or not as we did with the `onClick` method of the `ButtonComponent`
-from the last lesson.
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should respond to onClick event', () => {
+  cy.mount(ButtonComponent, {
+    componentProperties: {
+      onClick: {
+        emit: cy.spy().as('onClickSpy'),
+      } as any,
+    },
+  });
+  cy.get('button').click();
+  cy.get('@onClickSpy').should('have.been.called');
+});
+```
 
-Fortunately, Angular's dependency injection system makes this relatively easy to
-do. We must pass in a mock AuthService with a spy attached to the
-`login` method. We'll do so by passing in the mock to the `providers`:
+:::info
 
-```ts title=./client/src/app/components/login-form.component.ts
-it('should not try to authenticate if the form fields are invalid', () => {
-  cy.mount(LoginFormComponent, {
-    providers: [
-      {
-        provide: AuthService,
-        useValue: {
-          login: cy.spy().as('loginSpy'),
-        },
+We cast the `onClick` emitter as `any` here, so we don't have to mock all the
+methods an `EventEmitter` has. We'll see a better method for this in a moment.
+
+:::
+
+#### Testing onClick using Template Syntax
+
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should respond to onClick event', () => {
+  cy.mount('<app-button (click)="onClick.emit($event)">Click me</app-button>', {
+    declarations: [ButtonComponent],
+    componentProperties: {
+      onClick: {
+        emit: cy.spy().as('onClickSpy'),
       },
-    ],
+    },
   });
-
-  cy.get('button').contains('Sign in').click();
-  cy.get('@loginSpy').should('not.have.been.called');
+  cy.get('button').click();
+  cy.get('@onClickSpy').should('have.been.called');
 });
 ```
 
-And with that, you should see that all the validation tests now pass:
+## Using createOutputSpy to Mock Emitters
 
-![Login Form Validation Passes](/img/login-form-validation.jpg)
+In the previous tests, we mocked the `onClick` output by defining an object with
+an emitted event, which we assigned to a Cypress spy. In the component syntax
+example, we also had to cast that mock as `any`, which is always a code smell.
+We know this wasn't ideal, so we created a helper function called
+`createOutputSpy` that mocks an event emitter for you:
 
-## Test Invalid Credentials
-
-What should the form do when a syntactically valid email and password is entered, but those credentials don't match anything in the system? We display an invalid username or password error.
-
-The authentication result comes from the `authService.login` method we mocked in the last test. We could do something similar to test this, but I want to show you another method at your disposal.
-
-The `authService.login` method ultimately makes an HTTP request to check the credentials. We can use the [cy.intercept](https://docs.cypress.io/api/commands/intercept) command to "intercept" the request and return the values we need for the test. When we do so, the HTTP request is never sent to the server, and we effectively turned out component test into an integration test between the component and the `AuthService`.
-
-To use `cy.intercept`, call the command before the actual HTTP is made and pass in the method type, the path, and the response to return:
-
-```ts title=./client/src/app/components/login-form.component.ts
-it('should show bad login message when credentials are invalid', () => {
-  cy.intercept('POST', '/auth', {
-    statusCode: 401,
+```ts title=./client/src/app/components/button/button.component.cy.ts
+it('should respond to onClick event', () => {
+  cy.mount('<app-button (click)="onClick.emit($event)">Click me</app-button>', {
+    declarations: [ButtonComponent],
+    componentProperties: {
+      onClick: createOutputSpy('onClickSpy'),
+    },
   });
-
-  cy.mount(LoginFormComponent);
-  cy.get('button').contains('Sign in').click();
-
-  cy.get('input[type=email]').type('bad@email.com');
-  cy.get('input[type=password]').type('badpass');
-  cy.get('button').contains('Sign in').click();
-
-  cy.contains('Invalid username or password');
+  cy.get('button').click();
+  cy.get('@onClickSpy').should('have.been.called');
 });
 ```
 
-We return a 401 status code, which signifies to the client that the authentication request was unsuccessful. The auth service returns an error message saying the username or password was invalid.
+> `createOutputSpy` is imported from 'cypress/angular'
 
-## Test Valid credentials
+`createOutputSpy` sets up a spy and creates an
+[aliases](https://docs.cypress.io/guides/core-concepts/variables-and-aliases)
+using the string passed as a parameter to identify the alias.
 
-When testing what happens when the credentials are valid, we will take a similar approach to the above. Instead of returning a 401 status code, we will return a 200, signifying the request was successful.
+:::info
 
-The `LoginFormComponent` also has an `onLogin` event output that gets raised when the login is successful. Let's verify that also gets called using the spy techniques we've already used:
+We also have a method to automatically create spies for all outputs if you are
+using the component syntax. See
+[Using autoSpyOutputs](https://docs.cypress.io/guides/component-testing/events-angular#Using-autoSpyOutputs)
+in the docs for more info.
 
-```ts title=./client/src/app/components/login-form.component.ts
-it('should login when credentials are valid', () => {
-  cy.intercept('POST', '/auth', {
-    statusCode: 200,
-    body: {},
-  });
-
-  cy.mount(
-    LoginFormComponent,
-    {
-      componentProperties: {
-        onLogin: createOutputSpy('onLoginSpy'),
-      },
-    }
-  );
-
-  cy.get('input[type=email]').type('good@email.com');
-  cy.get('input[type=password]').type('goodpass');
-
-  cy.get('button').contains('Sign in').click();
-
-  cy.get('@onLoginSpy').should('have.been.called');
-});
-```
-
-> `createOutputSpy is imported from 'cypress/angular'
-
-## Additional Resources
-
-Congrats! You now have the basics for writing Angular Component Tests. Continue your testing journey by visiting the [Cypress Documentation](https://docs.cypress.com), learn testing concepts in depth in our [Real World Testing](https://learn.cypress.io/) curriculum, and join our online community on [Discord](https://discord.gg/cMjUZg7).
-
-Thanks for attending, and happy testing!
+:::
