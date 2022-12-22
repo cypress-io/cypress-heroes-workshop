@@ -1,6 +1,6 @@
 # Lab 3 - CT (Part 1)
 
-We will start our component testing journey in this lab by testing a relatively
+You will start your component testing journey in this lab by testing a relatively
 simple component. The Cypress Heroes app has a button component that would be a
 great example, so let's write some tests around that.
 

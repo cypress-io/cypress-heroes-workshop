@@ -1,215 +1,145 @@
 # Lab 2 - E2E (Part 2)
 
-You will start out working in this lab by learning how to do end-to-end testing. The Cypress Heroes app's main feature is it's ability to hire a hero. In this lab you will learn how to write and end-to-end test to cover this use case.
 
+## Writing A More Advanced Test
+Now that you have a good working test written, it is time to write a more advanced test that validates that the number of saves and likes gets incremented upon click.
 
-## Getting Started
-
-To get started, make checkout the `lab1-start` branch:
-
-```
-git checkout lab1-start
-```
-
-You can find a completed version of this lab in the [lab2-start](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab2-start) branch.
-
-If the app is not currently running, start it:
-
-```bash title='./client'
-npm run start
-```
-
-## Installing Cypress
-
-To begin you need to first install cypress as a dev dependency in our project:
-
-```bash title='./client'
-npm install cypress@latest -D
-```
-
-### Launching Cypress
-
-Once you have cypress installed in our project you are ready to launch it:
-
-```bash title='./client'
-npx cypress open
-```
-
-When Cypress launches, you need to choose whether you want to do end-to-end testing or component testing. Since this lab is focused on end-to-end testing go ahead and choose E2E Testing.
-
-![Choose Testing Type](/img/choose-testing-type.jpg)
-
-Next, choose what browser you want to use for testing and click the start button.
-
-
-### Creating Your First Test
-
-After the browser opens, you will see a screen that says the project is new and that you need to create your first spec. At this point you can either let Cypress scaffold out example specs or generate an empty spec for you. Go ahead and click the **Create new empty spec** button.
-
-![Create Your First Spec](/img/create-your-first-spec.png)
-
-The Cypress app will now prompt you where you want it to create your new spec. You can use the default and click **Create Spec**. You will now see a success messsage saying that the spec was created successfully. 
-
-### Running Your First Test
-
-Finally you are ready to run your first Cypress tests by clicking the **Okay, run the spec** button.
-
-![Spec Created Successfully](/img/spec-created-successfully.png)
-
-
-## Writing Your First Test
-
-Now that you have Cypress fully configured and your first example tests created go ahead and open it in your editor to begin writing your first test.
-
-### Visiting The App
-In the spec file, you should see following code:
-
-```ts title='./client/cypress/e2e/spec.cy.ts'
-describe('empty spec', () => {
-  it('passes', () => {
-    cy.visit('https://example.cypress.io')
-  })
-})
-
-```
-
-You now want to update the test so it looks like the following:
+### Invoke
+You will need to use the `cy.invoke()` method and some javascript to write this test.
 
 ```ts title='./client/cypress/e2e/spec.cy.ts'
 describe('Hiring A Hero', () => {
-  it('visits our app', () => {
-    cy.visit('http://localhost:4200')
-  })
-})
-```
-
-You will now see the Cypress Heroes App running inside of Cypress. Let's make one more change though before you move one. Let's set the baseUrl of our app inside the `cypress.config.ts`:
-
-```ts title='./client/cypress.config.ts'
-export default defineConfig({
-  e2e: {
-    baseUrl: 'http://localhost:4200',
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
-  },
-});
-```
-
-Now you no longer have to preface each test's `cy.visit()` urls with the app's **baseUrl**. You can change your original test to the following:
-
-```ts title='./client/cypress/e2e/spec.cy.ts'
-describe('Hiring A Hero', () => {
-  it('visits our app', () => {
-    cy.visit('/')
-  })
-})
-```
-### Selecting Elements from the DOM
-
-
-:::info
-
-Every test you write will include selectors for elements. To save yourself a lot of headaches, you should write selectors that are resilient to changes. See our [Best Practices Docs](https://docs.cypress.io/guides/references/best-practices#Selecting-Elements) to learn more.
-
-:::
-
-
-Users must be logged in before they can hire a hero so now first write a test that makes sure the application is able to login effectively.
-
-```ts title='./client/cypress/e2e/spec.cy.ts'
-describe('Hiring A Hero', () => {
-  it('can log in', () => {
-    cy.visit('/')
-    cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
-    cy.get('button').contains('Sign in').click(0)
-  })
-})
-```
-
-Now if you re-run your tests you will see the app clicks the **Login Button** then types an __email__ and __password__ into the corresponding inputs and clicks the __Log In Button__. Finally you will see in the top right corner that the app is now logged in. 
-
-Congratulations you've written your first useful test. Now go ahead and write a test that validates that you can hire **"The Smoker"**.
-
-```ts title='./client/cypress/e2e/spec.cy.ts'
-describe('Hiring A Hero', () => {
-  it('can log in', () => {
-    cy.visit('/')
-    cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
-    cy.get('button').contains('Sign in').click()
+  
+  beforeEach(() => {
+   ...
   })
 
-  it('can hire the Smoker', () => {
-    // We need to visit the site and login before we can hire the Smoker
-    cy.visit('/')
-    cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
-    cy.get('button').contains('Sign in').click()
+  it('can hire the Smoker', () => { ... }
+
+  it('increments the count when liking and hiring', () => {
+    // we need a javascript variable to store the value of saves
+    let saves = 0
 
     cy.get('app-hero-list>ul')
       // this gets the list items <li>
       .children()
-      // this gets the very first list item
-      .first()
+      // this gets the very last list item
+      .last()
       // this scopes the subsequent cypress commands to within this element
       .within(() => {
-        // validate that we have the correct hero
-        cy.get("h5").contains('The Smoker')
+        // get the number of current fans
+        cy.get('[data-cy=fans]')
+          // invokes a function on the yielded subject (element)
+          .invoke('text')
+          // convert that value as a string to a Number
+          .then(Number)
+          // then create a function to work with this number
+          .then(n => {
+            // click the like button
+            cy.get('[data-cy=like]').click()
+            // get the number of current fans now
+            cy.get('[data-cy=fans]')
+              // make sure the new number is 1 more than the previous
+              .contains(
+                // Need to convert it back to a string
+                String(n + 1)
+              )
+          })
+        
+        // do the same thing for saves
+        cy.get('[data-cy=saves]')
+          .invoke('text')
+          .then(Number)
+          .then(n => {
+            // assign the saves variable we previously created to the current value of saves in the DOM
+            saves = n
+          })
         // click the hire button
         cy.get('[data-cy=hire]').click()
-    })
+      })
 
-    // Because this opens a modal we need to break outside of the .within
-    // This makes sure that the confirmation modal that appears is once again for the smoker
-    cy.get('[data-cy="confirm-hero-name').contains('The Smoker')
+      // we have to leave the context of the last hero item to confirm the hire
+      cy.get('[data-cy=confirm-hero-name]').contains('Fly Girl')
+      cy.get('[data-cy=confirm-hire]').click()
 
-    // click the confirm hire button
-    cy.get('[data-cy=confirm-hire]').click()
+      // we need to reestablish the context of the last hero
+      cy.get('app-hero-list>ul').children().last().within(() => {
+        // get the number of saves now in the DOM
+        cy.get('[data-cy=saves]')
+          // make sure the new number is 1 more than the previous
+          .contains(
+            // Need to convert it back to a string
+            String(saves + 1)
+          )
+      })
   })
+```
+
+You now have another passing test that makes sure the value which is dynamic and seeded from the database is incremented when either the like or hire buttons are clicked.
+
+## Custom Commands
+Though your selectors are written in a way that will save you headaches you may have noticed it isn't the easiest thing to type over and over. Thankfully Cypress comes with its own API for creating custom commands. Now its time to create a custom command to make this easier. 
+
+:::info
+We recommend defining quieries in your `cypress/support/commands.ts` file, since it is loaded before any test files are evaluated via an import state in the `cypress/support/e2e.ts` file
+:::
+
+### getBySel()
+
+```ts title='./client/cypress/support/commands.ts'
+declare namespace Cypress {
+  interface Chainable {
+    getBySel(selector: string): Chainable
+  }
+}
+
+Cypress.Commands.add('getBySel', (selector: string, ...args): Cypress.Chainable => {
+  return cy.get(`[data-cy=${selector}]`, ...args)
 })
 ```
 
-Now if you save and re-run your tests you will see that the app is officially hiring the smoker. However, you should start to see a problem with the code above in that we are having to repeat `cy.visit()` and the login steps at the beginning of both tests. The good news is that you can move that code to to a `beforeEach()` hook that will run before each test starts and then remove the login test: 
+Now that you have a new custom command created you can now go in and replace all of your `cy.get('[data-cy=fans]')` commands with the new syntax `cy.getBySel('fans')`. 
+
+### Login
+
+Though we have 2 working tests, in a real-world app, your Cypress test suite will end up with more than 1 spec file. Inevitably you will run into a scenario where you need to reuse code or functionality across spec files. **Login** is a good example of this in the Heroes App. So now move the login code from the `beforeEach()` hook to a custom `login` command:
+
+```ts title='./client/cypress/support/commands.ts'
+declare namespace Cypress {
+  interface Chainable {
+    getBySel(selector: string): Chainable
+    login(email?: string, password?: string): void
+  }
+}
+
+Cypress.Commands.add('getBySel', (selector: string, ...args): Cypress.Chainable => {
+  return cy.get(`[data-cy=${selector}]`, ...args)
+})
+
+Cypress.Commands.add('login', (email = 'test@test.com', password = 'test123'): void => {
+  // notice we can still reference our other custom commands here!
+  cy.getBySel('login').contains('Login').click()
+  cy.get('input[type=email]').type('test@test.com')
+  cy.get('input[type=password]').type('test123')
+  cy.get('button').contains('Sign in').click()
+})
+```
+
+Now all you need to do is change your `beforeEach()` hook:
 
 ```ts title='./client/cypress/e2e/spec.cy.ts'
 describe('Hiring A Hero', () => {
-
+  
   beforeEach(() => {
     // visit the app
     cy.visit('/')
-    // login
-    cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('input[type=email]').type('test@test.com')
-    cy.get('input[type=password]').type('test123')
-    cy.get('button').contains('Sign in').click()
+    cy.login()
   })
-
-  it('can hire the Smoker', () => {
-    cy.get('app-hero-list>ul')
-      // this gets the list items <li>
-      .children()
-      // this gets the very first list item
-      .first()
-      // this scopes the subsequent cypress commands to within this element
-      .within(() => {
-        // validate that we have the correct hero
-        cy.get("h5").contains('The Smoker')
-        // click the hire button
-        cy.get('[data-cy=hire]').click()
-    })
-
-    // Because this opens a modal we need to break outside of the .within
-    // This makes sure that the confirmation modal that appears is once again for the smoker
-    cy.get('[data-cy=confirm-hero-name').contains('The Smoker')
-
-    // click the confirm hire button
-    cy.get('[data-cy=confirm-hire]').click()
-  })
-  
-})
 ```
+
+## Extra Credit
+
+- create a new spec called `admin.cy.ts`
+- write tests to make sure admins can create, update, and delete heroes
+- note: you will need to login using the admin credentials [found here](/#get-to-know-the-app)
+- note: I recommend not deleting the first or last heroes as the test we just wrote will break
