@@ -9,7 +9,7 @@ const config = {
   title: 'Codemash Cypress Workshop',
   tagline: 'Cypress is cool',
   url: 'https://cypress.io',
-  baseUrl: '/',
+  baseUrl: process.env.NODE_ENV === 'production' ? '/cypress-heroes-workshop/' : '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.svg',

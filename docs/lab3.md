@@ -9,16 +9,16 @@ great example, so let's write some tests around that.
 ## Getting Started
 
 To get started, make sure your current branch is clean, and then checkout the
-`lab2-start` branch:
+`lab3-start` branch:
 
 ```
-git checkout lab2-start
+git checkout lab3-start
 ```
 
 :::info
 
 You can find a completed version of this lab in the
-[lab2-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab2-complete)
+[lab4-start](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab4-start)
 branch.
 
 :::

@@ -1,5 +1,14 @@
 # Lab 2 - E2E (Part 2)
 
+## Getting Started
+
+To get started, make checkout the `lab2-start` branch:
+
+```
+git checkout lab2-start
+```
+
+You can find a completed version of this lab in the [lab3-start](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab3-start) branch.
 
 ## Writing A More Advanced Test
 Now that you have a good working test written, it is time to write a more advanced test that validates that the number of saves and likes gets incremented upon click.
