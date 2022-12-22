@@ -1,11 +1,11 @@
-# Cypress for Angular Devs Workshop
+# Codemash Cypress Workshop
 
-Welcome to the Cypress for Angular Devs Workshop!
+Welcome to the Codemash Cypress Workshop!
 
 ## Getting Started
 
 To get started, open the guide at
-[https://cypress-io.github.io/cypress-heroes-app/](https://cypress-io.github.io/cypress-heroes-app/)
+[https://cypress-io.github.io/cypress-heroes-workshop/](https://cypress-io.github.io/cypress-heroes-workshop/)
 and continue in the Getting Started section.
 
 If you cannot access the above URL, you can view the guide locally by running
