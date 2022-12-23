@@ -20,6 +20,7 @@ import './commands'
 // require('./commands')
 
 import { mount } from 'cypress/angular'
+import { ComponentsModule } from 'src/app/components/components.module'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -33,7 +34,14 @@ declare global {
   }
 }
 
-Cypress.Commands.add('mount', mount)
+type MountParams = Parameters<typeof mount>
 
-// Example use:
-// cy.mount(MyComponent)
+Cypress.Commands.add('mount', (component: MountParams[0], config: MountParams[1] = {}) => {
+  return mount(component, {
+    ...config,
+    imports: [
+      ...(config.imports || []),
+      ComponentsModule
+    ]
+  })
+})
