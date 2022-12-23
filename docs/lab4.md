@@ -14,33 +14,28 @@ Let's get started!
 
 ## Getting Started
 
-If you continue from lab 2, you can stay in your current branch.
+If you continue from lab 3, you can stay in your current branch.
 
-If you are starting with lab 3, checkout the `lab3-start` branch:
+If you are starting with lab 4, checkout the `lab4-start` branch:
 
 ```
-git checkout lab3-start
+git checkout lab4-start
 ```
 
 :::info
 
 You can find a completed version of this lab in the
-[lab3-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab3-complete)
+[lab4-complete](https://github.com/cypress-io/cypress-heroes-workshop/tree/lab4-complete)
 branch.
 
 :::
 
-If the app is not currently running, start it:
-
-```bash title=./client
-npm run start
-```
 
 Also, if Cypress is not already running, start it up and launch component
 testing:
 
 ```bash title=./client
-npx cypress open
+npx cypress open --component
 ```
 
 ## Create LoginForm Spec
@@ -66,7 +61,7 @@ wonder why. The app component has the module registered. But we
 are not using the main app component in our test. We are mounting the
 `LoginFormComponent` in isolation.
 
-#### Register Additional Modules and Declarations
+### Register Additional Modules and Declarations
 
 We've already seen how to register components as declarations by passing in a
 `declarations` array into the `cy.mount` command's second parameter. This config
@@ -132,23 +127,21 @@ type MountParams = Parameters<typeof mount>;
 Cypress.Commands.add(
   'mount',
   (component: MountParams[0], config: MountParams[1] = {}) => {
-    const declarations = [
-      ...(config.declarations || []),
-      LoginFormComponent,
-      InputFieldComponent,
-      ButtonComponent,
-      TextInputComponent,
-    ];
-    const imports = [
-      ...(config.imports || []),
-      HttpClientModule,
-      ReactiveFormsModule,
-    ];
     return mount(component, {
       ...config,
-      declarations,
-      imports,
-    });
+      declarations: [
+        ...(config.declarations || []),
+        LoginFormComponent,
+        InputFieldComponent,
+        ButtonComponent,
+        TextInputComponent
+      ],
+      imports: [
+        ...(config.imports || []),
+        HttpClientModule,
+        ReactiveFormsModule
+      ]
+    })
   }
 );
 ```
@@ -178,11 +171,13 @@ type MountParams = Parameters<typeof mount>;
 Cypress.Commands.add(
   'mount',
   (component: MountParams[0], config: MountParams[1] = {}) => {
-    const imports = [...(config.imports || []), ComponentsModule];
     return mount(component, {
       ...config,
-      imports,
-    });
+      imports: [
+        ...(config.imports || []),
+        ComponentsModule
+      ]
+    })
   }
 );
 ```
@@ -205,7 +200,7 @@ requirements here.
 2. The email address must be in the proper format; if not, show a message.
 3. The form should not submit to the server when in an invalid state.
 
-#### Test Required Field Validation
+### Test Required Field Validation
 
 For the first test, we will grab a reference to the button and click it without
 filling in the email or password. Then we will check that the validation error messages are displayed:
@@ -340,9 +335,4 @@ it('should login when credentials are valid', () => {
 ```
 
 > `createOutputSpy is imported from 'cypress/angular'
-
-## Additional Resources
-
-Congrats! You now have the basics for writing Angular Component Tests. Continue your testing journey by visiting the [Cypress Documentation](https://docs.cypress.com), learn testing concepts in depth in our [Real World Testing](https://learn.cypress.io/) curriculum, and join our online community on [Discord](https://discord.gg/cMjUZg7).
-
-Thanks for attending, and happy testing!
+`

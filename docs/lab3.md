@@ -23,16 +23,11 @@ branch.
 
 :::
 
-If the app is not currently running, start it:
-
-```bash title='./client'
-npm run start
-```
 
 ## Launch & Configure Cypress
 
-The project has Cypress installed, though it is not yet set up. When you launch
-the app for the first time in a new project Cypress will guide you through a
+The project still has Cypress installed, though it is not yet set up for Component Testing.
+When you re-launch the app Cypress will guide you through a
 configuration wizard to get you up and running quickly.
 
 To start, go into the **client** folder and open Cypress:
@@ -269,14 +264,13 @@ We know this wasn't ideal, so we created a helper function called
 
 ```ts title=./client/src/app/components/button/button.component.cy.ts
 it('should respond to onClick event', () => {
-  cy.mount('<app-button (click)="onClick.emit($event)">Click me</app-button>', {
-    declarations: [ButtonComponent],
+  cy.mount(ButtonComponent, {
     componentProperties: {
-      onClick: createOutputSpy('onClickSpy'),
-    },
-  });
-  cy.get('button').click();
-  cy.get('@onClickSpy').should('have.been.called');
+      onClick: createOutputSpy('onClickSpy')
+    }
+  })
+  cy.get('button').click()
+  cy.get('@onClickSpy').should('have.been.called')
 });
 ```
 

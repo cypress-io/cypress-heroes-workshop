@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-To get started, make checkout the `lab2-start` branch:
+To get started, make sure to checkout the `lab2-start` branch:
 
 ```
 git checkout lab2-start

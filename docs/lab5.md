@@ -1,11 +1,11 @@
 # Lab 5 - API
 
-We will finish our workshop in this lab by testing our API. Logging in as a user is a vital part of our application, so let's write some tests around the `/auth` endpoint.
+We will finish our workshop by testing our API. Logging in as a user is a vital part of our application, so let's write some tests around the `/auth` endpoint.
 
 
 ## Getting Started
 
-To get started, make checkout the `lab4-start` branch:
+To get started, make checkout the `lab5-start` branch:
 
 ```
 git checkout lab4-start
@@ -18,3 +18,10 @@ If the app is not currently running, start it:
 ```bash title='./server'
 npm run start
 ```
+
+
+## Additional Resources
+
+Congrats! You now have the basics for writing Angular Component Tests. Continue your testing journey by visiting the [Cypress Documentation](https://docs.cypress.com), learn testing concepts in depth in our [Real World Testing](https://learn.cypress.io/) curriculum, and join our online community on [Discord](https://discord.gg/cMjUZg7).
+
+Thanks for attending, and happy testing!
