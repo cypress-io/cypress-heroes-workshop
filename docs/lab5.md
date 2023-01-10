@@ -94,7 +94,7 @@ describe('Auth', () => {
   it('can authenticate', () => {
     cy.request({
       method: 'POST',
-      url: 'auth',
+      url: '/auth',
       body: {
         username: 'test@test.com',
         password: 'test123'
@@ -115,7 +115,7 @@ describe('Auth', () => {
   it('can authenticate', () => {
     cy.request({
       method: 'POST',
-      url: 'auth',
+      url: '/auth',
       body: {
         username: 'test@test.com',
         password: 'test123'
@@ -150,7 +150,7 @@ npm i cypress-plugin-api -D
 
 Now we need to add the plugin to our support file:
 
-```ts title='./server/cypress/support/e2e/ts'
+```ts title='./server/cypress/support/e2e.ts'
 import './commands'
 import 'cypress-plugin-api'
 ```
@@ -162,7 +162,7 @@ describe('Auth', () => {
   it('can authenticate', () => {
     cy.api({
       method: 'POST',
-      url: 'auth',
+      url: '/auth',
       body: {
         username: 'test@test.com',
         password: 'test123'
@@ -189,7 +189,7 @@ describe('Auth', () => {
   it('can authenticate', () => {
     cy.api({
       method: 'POST',
-      url: 'auth',
+      url: '/auth',
       body: {
         username: 'test@test.com',
         password: 'test123'
@@ -211,7 +211,7 @@ describe('Auth', () => {
   it('can authenticate', () => {
     cy.api({
       method: 'POST',
-      url: 'auth',
+      url: '/auth',
       body: {
         username: 'test@test.com',
         password: 'test123'

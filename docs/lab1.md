@@ -21,7 +21,7 @@ npm run start
 
 ## Installing Cypress
 
-To begin you need to first install cypress as a dev dependency in our project:
+To begin you need to first install cypress as a dev dependency in our project in a new terminal window:
 
 ```bash title='./client'
 npm install cypress@latest -D
@@ -122,9 +122,9 @@ describe('Hiring A Hero', () => {
   it('can log in', () => {
     cy.visit('/')
     cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
-    cy.get('button').contains('Sign in').click(0)
+    cy.get('input[type=email]').type('test@test.com')
+    cy.get('input[type=password]').type('test123')
+    cy.get('button').contains('Sign in').click()
   })
 })
 ```
@@ -140,8 +140,8 @@ describe('Hiring A Hero', () => {
   it('can log in', () => {
     cy.visit('/')
     cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
+    cy.get('input[type=email]').type('test@test.com')
+    cy.get('input[type=password]').type('test123')
     cy.get('button').contains('Sign in').click()
   })
 
@@ -149,8 +149,8 @@ describe('Hiring A Hero', () => {
     // We need to visit the site and login before we can hire the Smoker
     cy.visit('/')
     cy.get('[data-cy=login]').contains('Login').click()
-    cy.get('[input[type=email]').type('test@test.com')
-    cy.get('[input[type=password]').type('test123')
+    cy.get('input[type=email]').type('test@test.com')
+    cy.get('input[type=password]').type('test123')
     cy.get('button').contains('Sign in').click()
 
     cy.get('app-hero-list>ul')
