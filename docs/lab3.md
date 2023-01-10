@@ -36,7 +36,7 @@ To start, go into the **client** folder and open Cypress:
 npx cypress open
 ```
 
-![Choose CT](/img/cypress-choose-screen.jpg)
+![Choose CT](/img/cypress-choose-screen-2.jpg)
 
 When Cypress launches, choose component testing.
 
